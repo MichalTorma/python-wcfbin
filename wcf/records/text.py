@@ -28,7 +28,7 @@
 #  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from __future__ import absolute_import, unicode_literals, division
 
-from builtins import str, chr, bytes, int
+#from builtins import str, chr, bytes, int
 
 import struct
 import base64
@@ -580,7 +580,7 @@ class Chars8TextRecord(Text):
         if isinstance(value, str):
             self.value = value
         else:
-            self.value = str(value)
+            self.value = value.encode("utf-8")
 
     def __str__(self):
         r"""
@@ -589,7 +589,11 @@ class Chars8TextRecord(Text):
         >>> str(Chars8TextRecord("a<b>c>>&'\""))
         "a&lt;b&gt;c&gt;&gt;&amp;'&quot;"
         """
-        return escape(self.value)
+        #print self.value.__class__
+        #import sys
+        #sys.stdout.flush()
+        #return escape(self.value)
+        return self.value
 
     def to_bytes(self):
         r"""

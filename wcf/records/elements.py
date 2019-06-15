@@ -34,7 +34,7 @@ try:
     is_py2 = True
 except ImportError:
     is_py2 = False
-from builtins import str, chr, bytes
+#from builtins import str, chr, bytes
 
 import sys
 import struct
@@ -72,6 +72,7 @@ class ShortElementRecord(Element):
 
     def __str__(self):
         # return '<%s[name=%s]>' % (type(self).__name__, self.name)
+        #attribs = ' '.join([a.to_bytes().encode("utf-8") for a in self.attributes])
         attribs = ' '.join([str(a) for a in self.attributes])
         if attribs:
             attribs = ' ' + attribs

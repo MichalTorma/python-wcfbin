@@ -34,7 +34,7 @@ try:
     is_py2 = True
 except ImportError:
     is_py2 = False
-from builtins import str, chr, bytes
+#from builtins import str, chr, bytes
 
 import struct
 import logging

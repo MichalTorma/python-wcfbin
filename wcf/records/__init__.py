@@ -28,7 +28,7 @@
 #  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from __future__ import absolute_import, print_function, unicode_literals
 
-from builtins import str
+##from builtin import str
 import sys
 import logging
 
@@ -78,6 +78,40 @@ def print_records(records, skip=0, fp=None, first_call=True):
             was_el = False
     return was_el
 
+def print_records_str(records, skip=0, first_call=True):
+    """prints the given record tree into a file like object
+    
+    :param records: a tree of record objects
+    :type records: wcf.records.Record
+    :param skip: start value for intending (Default: 0)
+    :type skip: int
+    :param fp: file like object to print to (Default: sys.stdout)
+    
+    """
+    if records == None:
+        return ""
+
+    out=""
+    for r in records:
+        if isinstance(r, EndElementRecord):
+            continue
+        if isinstance(r, Element):
+            out+=(('\n' if not first_call else '') + ' ' * skip + str(r))
+        else:
+            out+=(str(r))
+       
+        new_line = False
+        if hasattr(r, 'childs'):
+            out += print_records_str(r.childs, skip+1, False)
+        if isinstance(r, Element):
+            if new_line:
+                out+=('\n' + ' ' * skip)
+            if hasattr(r, 'prefix'):
+                out+=('</%s:%s>' % (r.prefix, r.name))
+            else:
+                out+=('</%s>' % r.name)
+    return out
+
 def repr_records(records, skip=0):
     if records == None:
         return
@@ -105,7 +139,7 @@ def dump_records(records):
                 r.type = r.type + 1
                 msg += ' with EndElement (0x%X)' % r.type
         log.debug(msg)
-        log.debug('Value %s' % str(r))
+        #log.debug('Value %s' % str(r))
         if isinstance(r, Element) and not isinstance(r, EndElementRecord) and len(r.attributes):
             log.debug(' Attributes:')
             for a in r.attributes:
@@ -122,3 +156,5 @@ def dump_records(records):
             out += EndElementRecord().to_bytes()
 
     return out
+
+
